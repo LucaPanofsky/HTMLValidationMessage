@@ -14,26 +14,25 @@ Declarative form validation web component. Works with native HTML5 validation an
 
 ```html
 <form novalidate>
-  <input type="email" id="email" required>
-  <constraint-message watch="#email" data-constraint-trigger="input, blur"></constraint-message>
-  
-  <button type="submit">Submit</button>
+  <input type="email" name="email" id="email" required>
+  <validation-message 
+    data-validation-inputs="email"
+    data-target-name="email">
+  </validation-message>
 </form>
 ```
-
 That's it! Errors display automatically in the lightdom which are therefore easy to customize.
 
 ### Custom Cross-Field Validation
 
 ```html
 <form novalidate>
-  <input type="password" id="password" required minlength="8">
-  <input type="password" id="confirm" required minlength="8">
-  <constraint-message 
-    watch="#password #confirm" 
-    data-constraint-trigger="blur"
+  <input type="password" name="password" id="password" required pattern="[A-Za-z0-9]{8,}">
+  <input type="password" name="confirm" id="confirm" required pattern="[A-Za-z0-9]{8,}">
+  <validation-message 
+    data-validation-inputs="password confirm"
     data-validation-function="passwordMatch">
-  </constraint-message>
+  </validation-message>
 </form>
 
  <script>
@@ -58,15 +57,26 @@ That's it! Errors display automatically in the lightdom which are therefore easy
 
 ### Form Submission
 
-```javascript
-form.addEventListener('submit', (e) => {
-  e.preventDefault();
-  
-  if (HTMLFormValidators.validateFormConstraints(form)) {
-    // All valid - submit
-    form.submit();
-  }
-});
+```html
+<script>
+    document.addEventListener('submit', (e) => {
+        const form = e.target;
+        if (form.hasAttribute('validatemessage')) {
+            e.preventDefault();
+            const error = HTMLValidationMessageAPI.validate(form)
+            if (error) {
+                console.log('❌ Form validation failed', 'calling focusTarget');
+                error.focusTarget()
+            } else {
+                alert('✅ Form is valid! Submitting...');
+                const formData = new FormData(form);
+                for (const [key, value] of formData.entries()) {
+                    console.log(`${key}: ${value}`);
+                }
+            }
+        }
+    });
+</script>
 ```
 
 ## Attributes
@@ -79,7 +89,7 @@ form.addEventListener('submit', (e) => {
 ## Styling
 
 ```css
-constraint-message.error {
+validation-message.error {
   color: #d32f2f;
 }
 
@@ -87,23 +97,10 @@ input:user-invalid {
   border-color: #d32f2f;
 }
 ```
-
-## API
-
-**Register validator:**
-```javascript
-HTMLFormValidators.register(name, validatorFn);
-```
-
-**Validate form:**
-```javascript
-HTMLFormValidators.validateFormConstraints(form);
-```
-
-**Manual validation:**
-```javascript
-document.querySelector('constraint-message').validate();
-```
+## To do:
+- [ ] improve docs
+- [ ] make tests more robust 
+- [ ] what about form reset? perhaps worth considering the `<output/>` element
 
 ## License
 
