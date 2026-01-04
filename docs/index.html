@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Validation Message Examples</title>
+    <script src="https://unpkg.com/hyperscript.org@0.9.14"></script>
+    <script src="validation-message.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 40px 20px;
+            background: #f5f5f5;
+        }
+
+        h1 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 40px;
+        }
+
+        .example-section {
+            background: white;
+            border-radius: 8px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .example-section h2 {
+            margin-top: 0;
+            color: #1976d2;
+            border-bottom: 2px solid #1976d2;
+            padding-bottom: 10px;
+        }
+
+        .example-section p {
+            color: #666;
+            margin-bottom: 20px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 600;
+            color: #333;
+        }
+
+        input,
+        select {
+            width: 100%;
+            padding: 10px;
+            border: 2px solid #ddd;
+            border-radius: 4px;
+            box-sizing: border-box;
+            font-size: 14px;
+            transition: border-color 0.2s;
+        }
+
+        input:focus,
+        select:focus {
+            outline: none;
+            border-color: #1976d2;
+        }
+
+        input:user-invalid {
+            border-color: #d32f2f;
+        }
+
+        button[type="submit"] {
+            background: #1976d2;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 4px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            margin-top: 10px;
+            width: 100%;
+            transition: background 0.2s;
+        }
+
+        button[type="submit"]:hover {
+            background: #1565c0;
+        }
+
+        validation-message {
+            display: block;
+            margin-top: 5px;
+            font-size: 13px;
+            min-height: 18px;
+            font-weight: 500;
+        }
+
+        validation-message:not(:empty) {
+            color: #d32f2f;
+        }
+
+        .form-group label input[type="checkbox"] {
+            width: auto;
+            margin-right: 8px;
+        }
+    </style>
+</head>
+
+<body>
+    <main>
+        <h1>Validation Message Examples</h1>
+        <!-- Example 1: Basic Form Validation -->
+        <section class="example-section">
+            <h2>Example 1: Basic Form Validation</h2>
+            <p>Native validation, cross-field validation, date ranges, and checkbox acceptance.</p>
+            <form id="testForm" novalidate validatemessage>
+                <!-- Native validation -->
+                <div class="form-group">
+                    <label for="name">Name *</label>
+                    <input type="text" id="name" name="name" required minlength="2" autocomplete="off">
+                    <validation-message data-validation-inputs="name" data-validation-events="blur"
+                        data-validation-focus-target="#name">
+                    </validation-message>
+                </div>
+                <!-- Password -->
+                <div class="form-group">
+                    <label for="password">Password *</label>
+                    <input type="password" id="password" name="password" required minlength="4" autocomplete="off">
+                    <validation-message data-validation-inputs="password" data-validation-events="blur"
+                        data-validation-focus-target="#password">
+                    </validation-message>
+                </div>
+                <!-- Password confirmation with inline rule -->
+                <div class="form-group">
+                    <label for="confirm">Confirm Password *</label>
+                    <input type="password" id="confirm" name="confirm" required minlength="4" autocomplete="off">
+                    <validation-message data-validation-inputs="password confirm" data-validation-events="blur"
+                        data-validation-name="HTMLFormValidators.Registry.passwordMatch"
+                        data-validation-focus-target="#confirm" data-validation-rule="
+                        if password.validity.valid is false return '' end
+                        if confirm.validity.valid is false return confirm.validationMessage end
+                        if password.value is not confirm.value return 'Passwords must match.' end">
+                    </validation-message>
+                </div>
+                <!-- Date range validation -->
+                <div class="form-group">
+                    <label for="startDate">Start Date *</label>
+                    <input type="date" id="startDate" name="startDate" required autocomplete="off">
+                    <validation-message data-validation-inputs="startDate" data-validation-events="blur"
+                        data-validation-focus-target="#startDate">
+                    </validation-message>
+                </div>
+                <div class="form-group">
+                    <label for="endDate">End Date *</label>
+                    <input type="date" id="endDate" name="endDate" required autocomplete="off">
+                    <validation-message data-validation-inputs="startDate endDate" data-validation-events="blur"
+                        data-validation-name="HTMLFormValidators.Registry.dateRange"
+                        data-validation-focus-target="#endDate" data-validation-rule="
+                        if startDate.validity.valid is false return '' end
+                        if endDate.validity.valid is false return endDate.validationMessage end
+                        if endDate.valueAsDate < startDate.valueAsDate return 'End date must be after start date' end">
+                    </validation-message>
+                </div>
+                <!-- Checkbox validation -->
+                <div class="form-group">
+                    <label>
+                        <input type="checkbox" id="terms" name="terms" required>
+                        I agree to the terms and conditions *
+                    </label>
+                    <validation-message data-validation-inputs="terms" data-validation-events="change"
+                        data-validation-name="HTMLFormValidators.Registry.termsAreCompulsory" data-validation-rule="
+                        if terms.checked is false return 'You must accept the terms and conditions' end">
+                    </validation-message>
+                </div>
+                <button type="submit">Submit Form</button>
+            </form>
+        </section>
+        <!-- Example 2: MDN Postal Code Validation -->
+        <section class="example-section">
+            <h2>Example 2: Postal Code Validation with Regex</h2>
+            <p>Country-specific postal code formats using regular expressions.</p>
+
+            <form novalidate validatemessage>
+                <div class="form-group">
+                    <label for="country">Country *</label>
+                    <select id="country" name="country" required>
+                        <option value="">Select a country</option>
+                        <option value="ch">Switzerland</option>
+                        <option value="fr">France</option>
+                        <option value="de">Germany</option>
+                        <option value="nl">The Netherlands</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="postalCode">Postal Code *</label>
+                    <input type="text" id="postalCode" name="postalCode" required />
+                    <validation-message data-validation-inputs="country postalCode"
+                        data-validation-events="input delay:300, change"
+                        data-validation-name="HTMLFormValidators.Registry.postalCode"
+                        data-validation-rule="
+if country.value is ''
+  country.focus() then return 'Please select a country first' end
+if postalCode.value is '' 
+  postalCode.focus() then return 'Postal code is required' end
+if country.value is 'ch' and not rematches('^(CH-)?\\d{4}$', postalCode.value) 
+  postalCode.focus() then return 'Swiss postal codes must have exactly 4 digits: e.g. CH-1950 or 1950' end
+if country.value is 'fr' and not rematches('^(F-)?\\d{5}$', postalCode.value) 
+  postalCode.focus() then return 'French postal codes must have exactly 5 digits: e.g. F-75012 or 75012' end
+if country.value is 'de' and not rematches('^(D-)?\\d{5}$', postalCode.value) 
+  postalCode.focus() then  return 'German postal codes must have exactly 5 digits: e.g. D-12345 or 12345' end
+if country.value is 'nl' and not rematches('^(NL-)?\\d{4}\\s*([A-RT-Z][A-Z]|S[BCE-RT-Z])$', postalCode.value) 
+  postalCode.focus() then return 'Dutch postal codes must have exactly 4 digits, followed by 2 letters except SA, SD and SS'end">
+                    </validation-message>
+                </div>
+                <button type="submit">Validate</button>
+            </form>
+        </section>
+    </main>
+    <script>
+        document.addEventListener('submit', (e) => {
+            const form = e.target;
+            if (form.hasAttribute('validatemessage')) {
+                e.preventDefault();
+                const error = HTMLValidationMessageAPI.validate(form)
+                if (error) {
+                    console.log('❌ Form validation failed', 'calling focusTarget');
+                    error.focusTarget()
+                } else {
+                    alert('✅ Form is valid! Submitting...');
+                    const formData = new FormData(form);
+                    for (const [key, value] of formData.entries()) {
+                        console.log(`${key}: ${value}`);
+                    }
+                }
+            }
+        });
+    </script>
+</body>
+
+</html>

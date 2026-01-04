@@ -1,0 +1,31 @@
+{
+  "name": "validation-message",
+  "version": "1.0.0-alpha",
+  "description": "Declarative form validation web component with native HTML5 validation and custom validator support",
+  "main": "src/validation-message.js",
+  "module": "src/validation-message.js",
+  "exports": {
+    "src": {
+      "import": "./validation-message.js",
+      "require": "./validation-message.js",
+      "default": "./validation-message.js"
+    }
+  },
+  "scripts": {
+    "test": "jest"
+  },
+  "keywords": [
+    "web-component",
+    "form-validation",
+    "validation",
+    "custom-element",
+    "html5-validation",
+    "constraint-validation"
+  ],
+  "license": "MIT",
+  "devDependencies": {
+    "@jest/globals": "^29.7.0",
+    "jest": "^29.7.0",
+    "jest-environment-jsdom": "^29.7.0"
+  }
+}
