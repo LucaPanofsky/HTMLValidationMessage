@@ -2,6 +2,8 @@
 
 Declarative form validation web component. Works with native HTML5 validation and custom validators.
 
+Visit https://lucapanofsky.github.io/HTMLValidationMessage/ for a live demo.
+
 ## Install
 
 ```html
@@ -98,9 +100,9 @@ input:user-invalid {
 }
 ```
 ## To do:
-- [ ] improve docs
-- [ ] make tests more robust 
-- [ ] what about form reset? perhaps worth considering the `<output/>` element
+- [ ] improve docs (dev & test);
+- [ ] make tests more robust; 
+- [ ] what about form reset? perhaps worth considering the `<output/>` element.
 
 ## License
 
